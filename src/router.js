@@ -17,14 +17,6 @@ const vsoaCliSer = require('./vsoa-client-service');
 /**
  * 
  */
-router.get('/connect', function (req, res) {
-	res.send('Hello world!');
-});
-
-
-/**
- * 
- */
  router.get('/subscribe', function (req, res) {
 	res.send('Hello world!');
 });
