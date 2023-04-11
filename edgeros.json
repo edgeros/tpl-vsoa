@@ -1,0 +1,42 @@
+{
+    "name": "VSOA",
+    "bundleid": "com.acoinfo.tpl.vsoa",
+    "ignore_modules": [
+        "@edgeros/eslint-plugin-jsre",
+        "@edgeros/jsre-types"
+    ],
+    "ignore_path": [
+        "./test/**",
+        "./temp/**"
+    ],
+    "assets": {
+        "ico_big": "assets/big.png",
+        "ico_small": "assets/small.png",
+        "splash": "assets/splash.png"
+    },
+    "program": {
+        "gss": false,
+        "log": "console",
+        "will": false,
+        "reside": false,
+        "mesv": "1.3.7",
+        "experimental": false,
+        "resource": "public"
+    },
+    "vendor": {
+        "id": "10001",
+        "name": "EdgerOS",
+        "email": "edgeros@acoinfo.com",
+        "phone": "",
+        "fax": ""
+    },
+    "loading": {
+        "background": "#000000",
+        "animation": "enlarge"
+    },
+    "update": {
+        "remove": [
+            "public"
+        ]
+    }
+}

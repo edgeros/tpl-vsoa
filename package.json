@@ -1,0 +1,24 @@
+{
+  "name": "com.acoinfo.vsoa-template",
+  "version": "0.0.1",
+  "description": "一个 VSOA 开发模板",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edgeros/tpl-vsoa.git"
+  },
+  "main": "main.js",
+  "scripts": {
+    "build": "eos build"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@edgeros/eslint-plugin-jsre": "latest",
+    "@edgeros/jsre-types": "latest",
+    "eslint": "^7.23.0"
+  },
+  "author": "edgeros@acoinfo.com",
+  "bugs": {
+    "url": "https://github.com/edgeros/tpl-vsoa/issues"
+  },
+  "homepage": "https://github.com/edgeros/tpl-vsoa#readme"
+}
