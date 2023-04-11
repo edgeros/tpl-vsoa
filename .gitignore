@@ -1,4 +1,5 @@
 node_modules
+temp
 
 # Opertating System Files
 .DS_Store
