@@ -17,7 +17,7 @@ const vsoaCliSer = require('./vsoa-client-service');
 /**
  * 
  */
- router.get('/subscribe', function (req,res) {
+router.get('/subscribe', function (req, res) {
 	vsoaCliSer.vsoaClientSub();
 	res.send('subscribe success!')
 });
@@ -26,7 +26,7 @@ const vsoaCliSer = require('./vsoa-client-service');
 /**
  * 
  */
- router.get('/unsubscribe', function (req, res) {
+router.get('/unsubscribe', function (req, res) {
 	vsoaCliSer.vsoaClientUnsub();
 	res.send('unsubscribe success!');
 });
@@ -34,7 +34,7 @@ const vsoaCliSer = require('./vsoa-client-service');
 /**
  * 
  */
- router.get('/call', function (req, res) {
+router.get('/call', function (req, res) {
 	vsoaCliSer.vsoaClientCall();
 	res.send('call success!');
 });
@@ -43,8 +43,8 @@ const vsoaCliSer = require('./vsoa-client-service');
 /**
  * 
  */
- router.get('/fetch', function (req, res) {
-	vsoaCliSer.vsoaClientFetch(); 	
+router.get('/fetch', function (req, res) {
+	vsoaCliSer.vsoaClientFetch();
 	res.send('Fetch success!');
 });
 
@@ -59,5 +59,12 @@ router.get('/datagram', function (req, res) {
 });
 
 
+router.get('/test', function (req, res) {
+	res.json({
+		errcode:0,
+		errmsg:'ok',
+		data: 'success'
+	})
+})
 
 module.exports = router

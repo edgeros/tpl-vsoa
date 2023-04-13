@@ -4,10 +4,70 @@
 <head>
   <meta charset="UTF-8">
   <title>VSOA Template</title>
+  <script src="/lib/sdk.min.js"></script>
 </head>
 
 <body>
   <h1>Hello World!</h1>
+  <button onclick="sendTest()">按钮</button>
 </body>
+
+<script>
+  let token = ''
+  let srand = ''
+  // 初始化
+  edger.token().then(data => {
+    var { token, srand } = data;
+    token = data.token;
+    srand = data.srand;
+    init();
+  }).catch(error => {
+    console.error(error);
+  });
+
+  // 监听token更新
+  edger.onAction('token', (data) => {
+    token = data.token;
+    srand = data.srand;
+  });
+
+  // 获取网络权限
+  function init() {
+    edger.permission.request({
+      code: ['network'],
+      type: 'permissions'
+    }).then((data) => {
+      console.log('申请网络权限:', data)
+    }).catch(error => {
+      console.error(error);
+    });
+  }
+
+  // 发送请求测试接口请求
+  async function sendTest() {
+    const res = await httpSend('/api/test')
+    console.log('Send Test:', res)
+  }
+
+
+  /**
+   *  http 请求链接
+   */
+  async function httpSend(url) {
+    try {
+      const res = await fetch('/api/test', {
+        method: 'GET',
+        // body: JSON.stringify(data),// data can be `string` or {object}!=
+        headers: new Headers({
+          "edger-token": token,
+          "edger-srand": srand,
+        })
+      })
+      return res.json()
+    } catch (err) {
+      console.log("HTTP: Send Error:", err)
+    }
+  }
+</script>
 
 </html>
