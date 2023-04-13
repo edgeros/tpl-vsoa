@@ -1,6 +1,6 @@
 {
     "name": "com.acoinfo.vsoa-template",
-    "version": "0.0.36",
+    "version": "0.0.123",
     "description": "一个 VSOA 开发模板",
     "repository": {
         "type": "git",

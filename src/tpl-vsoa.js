@@ -28,7 +28,7 @@ app.use('/api', router);
 
 
 /* 当vsoa server 启动后启动 EAP后台  */
- new Task('src/vsoa-server-task.js');
+new Task('src/vsoa-server-task.js');
 Task.on('message', function (msg, from) {
     if (msg.type === 'vsoa server') {
         /* 初始化 vsoa client 实例 */

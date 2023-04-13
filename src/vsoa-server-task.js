@@ -27,13 +27,16 @@ server.onclient = function (cli, connect) {
 
 /* 当服务器接收到DATAGRAM类型的数据包时，调用此回调  */
 server.ondata = function (cli, url, payload) {
-    console.log(url, JSON.stringify(payload.param));
+    console.log(`[tpl vsoa] vsoa server receive message form :${url}`, `messgae:`,JSON.stringify(payload.param));
+    /* 发送数据包给客户端 */
 }
 
-/* VSOA服务器对象继承自EventEmitter, on()方法可用于为不同的服务添加处理回调。 */
+
+/* VSOA服务器对象继承自EventEmitter, on()方法可用于为不同的服务添加处理回调。*/
 server.on('/echo', function (cli, request, payload) {
     cli.reply(0, request.seqno, payload);
 });
+
 
 /* 该功能可以帮助VSOA服务器同步数据，减少数据同步代码。 */
 const data = {
@@ -41,7 +44,7 @@ const data = {
 }
 server.on('/count', function (cli, request, payload) {
     server.syncer(cli, request, payload, data, param => {
-        if (typeof param.foo === 'number') {
+        if (typeof param.count === 'number') {
             data.count = param.count;
             return vsoa.code.SUCCESS;
         } else {
@@ -57,8 +60,6 @@ setInterval(() => {
     server.publish('/a/b', { param: { msg: 'Message sent from "/a/b/' } });
     server.publish('/a/b/c', { param: { msg: 'Message sent from "/a/b/c"' } });
 }, 1000);
-
-
 
 
 /* 启动 VSOA 服务 */

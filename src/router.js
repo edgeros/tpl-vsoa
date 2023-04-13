@@ -17,8 +17,9 @@ const vsoaCliSer = require('./vsoa-client-service');
 /**
  * 
  */
- router.get('/subscribe', function (req, res) {
-	res.send('Hello world!');
+ router.get('/subscribe', function (req,res) {
+	vsoaCliSer.vsoaClientSub();
+	res.send('subscribe success!')
 });
 
 
@@ -26,14 +27,16 @@ const vsoaCliSer = require('./vsoa-client-service');
  * 
  */
  router.get('/unsubscribe', function (req, res) {
-	res.send('Hello world!');
+	vsoaCliSer.vsoaClientUnsub();
+	res.send('unsubscribe success!');
 });
 
 /**
  * 
  */
  router.get('/call', function (req, res) {
-	res.send('Hello world!');
+	vsoaCliSer.vsoaClientCall();
+	res.send('call success!');
 });
 
 
@@ -41,7 +44,8 @@ const vsoaCliSer = require('./vsoa-client-service');
  * 
  */
  router.get('/fetch', function (req, res) {
-	res.send('Hello world!');
+	vsoaCliSer.vsoaClientFetch(); 	
+	res.send('Fetch success!');
 });
 
 
@@ -50,7 +54,8 @@ const vsoaCliSer = require('./vsoa-client-service');
  * 
  */
 router.get('/datagram', function (req, res) {
-	res.send('Hello world!');
+	vsoaCliSer.vsoaClientDatagram()
+	res.send('Datgram success!');
 });
 
 
