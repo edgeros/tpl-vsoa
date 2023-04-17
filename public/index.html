@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <title>VSOA Template</title>
   <script src="/lib/sdk.min.js"></script>
+  <script src="/lib/socket.io.js"></script>
 </head>
 
 <body>
@@ -68,6 +69,44 @@
       console.log("HTTP: Send Error:", err)
     }
   }
+
+
+
+  /**
+   * socket.io 请求链接
+   */
+  function startSocketIo() {
+    const socket = io(`wss://${location.host}:${location.port}`, {
+      reconnectionDelayMax: 10000,
+    });
+
+    setTimeout(() => {
+      console.log("-------send-------")
+      socket.send('Hello!');
+    }, 3000);
+
+
+    socket.on('connect', () => {
+      // either with send()
+      socket.send('Hello!');
+
+      // or with emit() and custom event names
+      socket.emit('salutations', 'Hello!', { 'mr': 'john' }, Uint8Array.from([1, 2, 3, 4]));
+    });
+
+    // handle the event sent with socket.send()
+    socket.on('message', data => {
+      console.log(data);
+    });
+
+    // handle the event sent with socket.emit()
+    socket.on('greetings', (elem1, elem2, elem3) => {
+      console.log(elem1, elem2, elem3);
+    });
+  }
+
+  startSocketIo();
+
 </script>
 
 </html>
