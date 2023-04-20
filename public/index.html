@@ -2,20 +2,155 @@
 <html lang="en">
 
 <head>
+  <meta name="viewport" content="width=device-width, viewport-fit=cover" />
   <meta charset="UTF-8">
   <title>VSOA Template</title>
   <script src="/lib/sdk.min.js"></script>
   <script src="/lib/socket.io.js"></script>
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-  <h1>Hello World!</h1>
-  <button onclick="sendTest()">按钮</button>
+  <div class="container">
+    <h2>欢迎使用爱智VSOA模块</h2><br>
+    <div class="switchbox">
+      <h3>订阅和取消订阅</h3>
+      <div class="box1">
+        <p style="margin-left: 8%">服务地址:'/a'</p>
+        <label class="switch" style="margin-right: 8%">
+          <input class="selec1" type="checkbox">
+          <div class="slider round"></div>
+        </label>
+      </div><br>
+      <div class="box2">
+        <p style="margin-left: 8%">服务地址:'/a/b'</p>
+        <label class="switch" style="margin-right: 8%">
+          <input class="selec2" type="checkbox">
+          <div class="slider round"></div>
+        </label>
+      </div>
+    </div><br>
+    <div class="topper">
+      <h3 >展示从后台传入的数据</h3>
+      <button class="btn2" onclick="clearData()" >清除数据</button>
+    </div>
+    <div class="content">
+        <ul class="list"></ul>
+    </div><br>
+    <div class="popbox">
+      <button class="showPopup" onclick="showPopup1()">发送RPC消息</button>
+      <button class="showPopup" onclick="showPopup2()">同步RPC消息</button>
+      <div id="overlay">
+        <div class="popup">
+          <p class="popup_content"></p>
+          <div class="popup_btn">
+            <button class="confirmBtn" onclick="hidePopup()">知道了</button>
+          </div>
+        </div>
+      </div>
+    </div><br>
+    <div class="rooter">
+      <input style="height:40px" class="bagcontent" type="text" placeholder="请输入你需要发送到后台的内容">
+      <button class="sendbag" type="submit">确认发包</button>
+    </div>
+  </div>
 </body>
 
 <script>
+  /* ---------------------- DOM事件操作----------------------*/
+  const list = document.querySelector('.list');
+  const selec1=document.querySelector('.selec1')
+  const selec2=document.querySelector('.selec2')
+  const popContent=document.querySelector('.popup_content')
+  const bagcontent=document.querySelector('.bagcontent')
+  const sendbag=document.querySelector('.sendbag')
+  
+  /*清除数据*/
+  function clearData() {
+    list.innerHTML = '';
+  }
+
+  /*RPC弹出框事件*/
+  function showPopup1(){
+    var overlay = document.getElementById("overlay");
+    overlay.style.display = "block";
+    const content=sendCall()
+    content.then((data)=>{
+      popContent.innerHTML=`现在的时间是:${data.today}`
+    })
+  }
+
+  function showPopup2(){
+    var overlay = document.getElementById("overlay");
+    overlay.style.display = "block";
+    const content=sendFetch()
+    content.then((data)=>{
+      popContent.innerHTML=`收到的消息是:${data.count}`
+    })
+  }
+
+  function hidePopup(){
+    var overlay = document.getElementById("overlay");
+    overlay.style.display = "none";
+  }
+
+  /*Switch控件绑定事件,开和关对应的触发订阅和取消订阅两种行为*/
+  selec1.addEventListener('click', function() {
+      if(this.checked){
+        sendSub1()
+      }else{
+        sendUnsub1()
+        list.innerHTML+=`<li>地址为'/a'的服务已经取消订阅</li>`
+      }
+  })
+  selec2.addEventListener('click', function() {
+      if(this.checked){
+        sendSub2()
+      }else{
+        sendUnsub2()
+        list.innerHTML+=`<li>地址为'/a/b'的服务已经取消订阅</li>`
+      }
+  })
+
+  /*发包事件部分*/
+  sendbag.addEventListener('click', function() {
+    sendDatagram()
+    bagcontent.value=null
+  })
+  
+  /* ---------------------- 初始化网络----------------------*/
   let token = ''
   let srand = ''
+  const socket = io(`https://${location.host}`, {
+    path: '/socket.io',
+    reconnectionDelayMax: 10000,
+  });
+
+  /*用于接收从后端发至前端的消息*/
+  socket.on('connect', function () { 			
+    socket.on('subscribe1', (data) => {
+      const Ele = document.createElement('li')
+      const content=data[1].param.msg
+      let text = `收到来自  ${data[0]}  的服务,内容为: ${content}`
+      Ele.textContent = text;
+      list.appendChild(Ele)
+    })
+    socket.on('subscribe2', (data) => {
+      const Ele = document.createElement('li')
+      const content=data[1].param.msg
+      let text = `收到来自${data[0]}的服务,内容为: ${content}`
+      Ele.textContent = text;
+      list.appendChild(Ele)
+    })
+    socket.on('datagram', (data) => {
+      const Ele = document.createElement('li')
+      const content=data.param
+      let text = `发送到服务端的内容为: ${content}`
+      Ele.textContent = text;
+      list.appendChild(Ele)
+    })
+  })
+
   // 初始化
   edger.token().then(data => {
     var { token, srand } = data;
@@ -44,69 +179,72 @@
     });
   }
 
-  // 发送请求测试接口请求
-  async function sendTest() {
-    const res = await httpSend('/api/test')
-    console.log('Send Test:', res)
+
+
+  /* ---------------------- 获取后台服务----------------------*/
+
+  /*发送订阅请求*/
+  function sendSub1() {
+    socket.emit('url1', '/a')
+    httpSend('subscribe')
   }
 
+  function sendSub2() {
+    socket.emit('url2', '/a/b')
+    httpSend('subscribe')
+  }
+
+  // 发送取消订阅请求
+  function sendUnsub1() {
+    socket.emit('url1', '/a')
+    httpSend('unsubscribe')
+  }
+  function sendUnsub2() {
+    socket.emit('url2', '/a/b')
+    httpSend('unsubscribe')
+  }
+
+  // 发送RPC消息请求
+  async function sendCall() {
+    const data = await httpSend('call')
+    const time = await data.json()
+    return  time.param
+  }
+
+  // 发送同步RPC请求
+  async function sendFetch() {
+    const data = await httpSend('fetch')
+    const msg = await data.json()
+    return msg.param
+  }
+
+  // 发包
+  function sendDatagram() {
+    const vals=bagcontent.value
+    if(vals){
+      socket.emit('bags',vals)
+      httpSend('datagram')
+    }
+  }
 
   /**
    *  http 请求链接
    */
-  async function httpSend(url) {
+  async function httpSend(router) {
     try {
-      const res = await fetch('/api/test', {
+      const res = await fetch(`/api/${router}`, {
         method: 'GET',
-        // body: JSON.stringify(data),// data can be `string` or {object}!=
+        // body: JSON.stringify(data),// data can be `string` or {object}
         headers: new Headers({
           "edger-token": token,
           "edger-srand": srand,
         })
       })
-      return res.json()
+      return res;
     } catch (err) {
       console.log("HTTP: Send Error:", err)
     }
   }
-
-
-
-  /**
-   * socket.io 请求链接
-   */
-  function startSocketIo() {
-    const socket = io(`wss://${location.host}:${location.port}`, {
-      reconnectionDelayMax: 10000,
-    });
-
-    setTimeout(() => {
-      console.log("-------send-------")
-      socket.send('Hello!');
-    }, 3000);
-
-
-    socket.on('connect', () => {
-      // either with send()
-      socket.send('Hello!');
-
-      // or with emit() and custom event names
-      socket.emit('salutations', 'Hello!', { 'mr': 'john' }, Uint8Array.from([1, 2, 3, 4]));
-    });
-
-    // handle the event sent with socket.send()
-    socket.on('message', data => {
-      console.log(data);
-    });
-
-    // handle the event sent with socket.emit()
-    socket.on('greetings', (elem1, elem2, elem3) => {
-      console.log(elem1, elem2, elem3);
-    });
-  }
-
-  startSocketIo();
-
 </script>
 
 </html>

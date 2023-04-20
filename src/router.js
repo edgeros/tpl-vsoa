@@ -15,7 +15,7 @@ const router = Router.create();
 const vsoaCliSer = require('./vsoa-client-service');
 
 /**
- * 
+ * 订阅服务接口
  */
 router.get('/subscribe', function (req, res) {
 	vsoaCliSer.vsoaClientSub();
@@ -24,7 +24,7 @@ router.get('/subscribe', function (req, res) {
 
 
 /**
- * 
+ * 取消订阅服务接口
  */
 router.get('/unsubscribe', function (req, res) {
 	vsoaCliSer.vsoaClientUnsub();
@@ -32,39 +32,32 @@ router.get('/unsubscribe', function (req, res) {
 });
 
 /**
- * 
+ * RPC
  */
 router.get('/call', function (req, res) {
-	vsoaCliSer.vsoaClientCall();
-	res.send('call success!');
-});
+	vsoaCliSer.vsoaClientCall().then((time)=>{
+		res.json(time)
+		res.send('call success!');
+		
+	});
+})
 
-
-/**
- * 
+/**  
+ * RPC异步模式接口
  */
 router.get('/fetch', function (req, res) {
-	vsoaCliSer.vsoaClientFetch();
-	res.send('Fetch success!');
+	vsoaCliSer.vsoaClientFetch().then((data)=>{
+		res.json(data.payload)
+		res.send('fetch success!');
+	})
 });
 
-
-
 /**
- * 
+ * Datagram发包形式接口
  */
 router.get('/datagram', function (req, res) {
 	vsoaCliSer.vsoaClientDatagram()
 	res.send('Datgram success!');
 });
-
-
-router.get('/test', function (req, res) {
-	res.json({
-		errcode:0,
-		errmsg:'ok',
-		data: 'success'
-	})
-})
 
 module.exports = router

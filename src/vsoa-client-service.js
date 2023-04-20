@@ -1,20 +1,15 @@
+/**
+* Copyright (c) 2023 EdgerOS Team.
+* All rights reserved.
+*
+* Detailed license information can be found in the LICENSE file.
+*
+* Author : Fu Wenhao <fuwenhao@acoinfo.com>
+* File   : vsoa-client-service.js
+* Desc   : Initialize a" vsoa-client" and listen server
+*/
 const vsoa = require('vsoa')
 const Tcp = require('tcp');
-
-
-const vsoaClient = new vsoa.Client({
-    pingInterval: 5000, 
-    pingTimeout: 3000, 
-    pingLost: 5
-})
-vsoaClient.on('connect',  (info)=> {
-    console.log('[tpl vsoa] vsoa client connect to server:event]', info)
-})
-
-vsoaClient.on('error',(err)=>{
-    console.log('[tpl vsoa] vsoa client connect error]', err)
-})
-
 
 /**
  * init vsoa client
@@ -29,56 +24,115 @@ function vsoaClientInit(config) {
     })
 }
 
-//发布订阅模式
+/**
+ * init io and get data from FrontEnd
+*/
+let io=null
+let url=''
+let content={}
+function createSocketIO(server){
+    if(server){
+        io=server
+        io.on('connection',(socket)=>{
+            socket.on('url1',(arg)=>{
+                url=arg
+            })
+            socket.on('url2',(arg)=>{
+                url=arg
+            })
+            socket.on('bags',(arg)=>{
+                content=arg
+                console.log('------------',content)
+            })
+        })
+    }
+}
 
+//Client 实例
+const vsoaClient = new vsoa.Client({
+    pingInterval: 5000, 
+    pingTimeout: 3000, 
+    pingLost: 5
+})
+
+
+
+//监听客户端与服务端连接是否成功
+vsoaClient.on('connect',  (info)=> {
+    console.log('[tpl vsoa] vsoa client connect to server:event]', info)
+})
+
+//监听客户端与服务端连接失败的信息
+vsoaClient.on('error',(err)=>{
+    console.log('[tpl vsoa] vsoa client connect error]', err)
+})
+
+//监听客户端收到服务端发送的消息，每当收到一条消息时，都会发送一条消息
+vsoaClient.on('message',(url,payload)=>{
+    console.log(`[tpl vsoa] the message from ${url}:` ,JSON.stringify(payload))
+    switch (url){
+        case '/a':
+            io.emit('subscribe1',[url,payload]);
+            break;
+        case '/a/b':
+            io.emit('subscribe2',[url,payload]);
+    }
+})
+
+//发布订阅模式
 //客户端订阅服务端发布的服务
+
 function vsoaClientSub(){
-    vsoaClient.subscribe('/a', (err) => {
+    vsoaClient.subscribe(url, (err) => {
         if(err){
             console.error('[tpl vsoa] subscribe error',err)
-        }else{
-            vsoaClient.on('message',(url,payload)=>{
-                console.log(`[tpl vsoa] the message from ${url}:` ,JSON.stringify(payload))
-            })
         }
     })
 }
 
 //客户端取消服务端的服务
 function vsoaClientUnsub(){
-    vsoaClient.unsubscribe('/a', (err) => {
+    vsoaClient.unsubscribe(url, (err) => {
         if(err){
             console.error('[tpl vsoa] unsubscribe error',err)
         }else{
-            console.log('[tpl vsoa] vsoa client unsubscribe:callback]',`service ${'/a'} is unsubscribed`)
+            console.log('[tpl vsoa] vsoa client unsubscribe:callback]',`service ${url} is unsubscribed`)
         }
     })
 }
 
-//RPC访问方式开发
+
+//RPC call
 function vsoaClientCall(){
-    //设置
-    vsoaClient.call('/echo',{method:vsoa.method.SET},{
-        param:{hello:'hello'}
-    },(error,payload)=>{
-        if(error){
-            console.error('[tpl vsoa] call set error',error)
-        }else{
-            console.info('[tpl vsoa] call set:callback]',JSON.stringify(payload))
-        }
+    return new Promise((resolve,reject)=>{
+        vsoaClient.call('/time',function(error,payload){
+            if(error){
+                reject(error)
+            }else{
+                console.log('[tpl vsoa] vsoa client call:callback]',JSON.stringify(payload))
+                resolve(payload)
+            }
+        })
     })
 }
 
-//
+//RPC异步模式
 function vsoaClientFetch(){
-    vsoaClient.fetch('/count').then((payload,tunid)=>{
-        console.info('[tpl vsoa] fetch:callback]',JSON.stringify(payload))
-    },error=>console.error('[tpl vsoa] fetch error',error.message))
+    return new Promise((resolve,reject)=>{ 
+        vsoaClient.fetch('/count')
+        .then((payload,tunid)=>{
+            console.log('[tpl vsoa] vsoa client fetch:callback]',JSON.stringify(payload))
+            resolve(payload)
+        })
+    })
 }
+
+
 
 //Datagram方式传递参数
 function vsoaClientDatagram(){
-    vsoaClient.datagram('/light',{param:{world:'world'}},true);
+    vsoaClient.datagram('/light',{param:content},true);
+    io.emit('datagram',{param:content})
 }
 
 module.exports = {
@@ -87,5 +141,6 @@ module.exports = {
     vsoaClientUnsub,
     vsoaClientCall,
     vsoaClientFetch,
-    vsoaClientDatagram 
+    vsoaClientDatagram,
+    createSocketIO
 }
