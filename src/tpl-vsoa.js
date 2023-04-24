@@ -27,7 +27,7 @@ app.use(WebApp.static('./public'));
 /* Set test rest */
 app.use('/api', router);
 
-
+/* Set IO instance */
 const io = socketIo(app, { 
     serveClient: false,
     pingInterval: 10000,

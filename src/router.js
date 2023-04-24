@@ -37,7 +37,6 @@ router.get('/call', function (req, res) {
 	vsoaCliSer.vsoaClientCall().then((time)=>{
 		res.json(time)
 		res.send('call success!');
-		
 	});
 })
 

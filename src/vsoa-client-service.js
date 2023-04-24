@@ -16,12 +16,13 @@ const Tcp = require('tcp');
  * @param {object} config
  * @param {string} config.addr vsoa 服务地址
  * @param {number} config.port port 服务端口
+ * @param {object} server io服务
  */
 const addr='127.0.0.1'
 let io=''
 let url=''
 let content={}
-/* 初始化服务端和io*/
+/* 初始化服务端和io */
 function vsoaClientInit(config,server) {
     io=server
     var saddr = Tcp.sockaddr(addr, config.port);
@@ -104,7 +105,7 @@ function vsoaClientCall(){
     })
 }
 
-//RPC异步模式
+//RPC同步
 function vsoaClientFetch(){
     return  vsoaClient.fetch('/count')
 }

@@ -48,6 +48,9 @@ function clearData() {
 }
 
 /* 将数据展示在文本框 */
+/**
+ * @param {object} data 数组对象
+*/
 function listData(data){
   const Ele = document.createElement('li')
   if(data instanceof Array){
@@ -65,6 +68,10 @@ function listData(data){
 }
 
 /* Switch控件绑定事件,开和关对应的触发订阅和取消订阅两种行为 */
+/**
+ * @param {object} element 鼠标点击事件对象
+ * @param {string} urlpath 要跳转的页面的URL地址路径字符串
+ */
 function getData(element) {
   const urlpath = element.name
   if (element.checked) {
@@ -84,15 +91,13 @@ function showPopup(element) {
     const content = sendCall()
     content.then((data) => {
       popContent.innerHTML = `现在的时间是:${data.today}`
-    }
-    )
+    })
   }
   if (element.name === 'fetchbtn') {
     const content = sendFetch()
     content.then((data) => {
       popContent.innerHTML = `收到的消息是:${data.count}`
-    }
-    )
+    })
   }
 }
 
@@ -150,7 +155,7 @@ async function sendFetch() {
   return msg.param
 }
 
-// 发包
+/* 发包 */ 
 function sendDatagram() {
   const vals = bagcontent.value
   if (vals) {
@@ -159,9 +164,8 @@ function sendDatagram() {
   }
 }
 
-/**
- *  http 请求链接
- */
+
+ /* http 请求链接*/
 async function httpSend(router) {
   try {
     const res = await fetch(`/api/${router}`, {
