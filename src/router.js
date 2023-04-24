@@ -22,7 +22,6 @@ router.get('/subscribe', function (req, res) {
 	res.send('subscribe success!')
 });
 
-
 /**
  * 取消订阅服务接口
  */
@@ -32,7 +31,7 @@ router.get('/unsubscribe', function (req, res) {
 });
 
 /**
- * RPC
+ * RPC发送信息
  */
 router.get('/call', function (req, res) {
 	vsoaCliSer.vsoaClientCall().then((time)=>{

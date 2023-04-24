@@ -20,7 +20,7 @@ body {font:normal 100% Arial,sans-serif;font-size:14px; font-size:1.4rem; }
     width: 80%;
     flex-direction: column;
 }
-.switchbox .box1,.switchbox .box2{
+.switchbox .box{
   height: 85px; 
   border: 1px solid #2c3e50; 
   width: 100%; 
@@ -30,6 +30,7 @@ body {font:normal 100% Arial,sans-serif;font-size:14px; font-size:1.4rem; }
   align-items: center;
   justify-content:space-between;
 }
+
 .topper{
   width: 80%;
   display: flex;
@@ -176,8 +177,8 @@ body {font:normal 100% Arial,sans-serif;font-size:14px; font-size:1.4rem; }
     color: #ffffff;
     background-color: #337ab7;
   }
+  
 /* Button组件 */
-
 button{
   background-color:dodgerblue;
   color:white;

@@ -31,11 +31,9 @@ server.ondata = function (cli, url, payload) {
     /* 发送数据包给客户端 */
 }
 
-
 /* VSOA服务器对象继承自EventEmitter, on()方法可用于为不同的服务添加处理回调。*/
-
 server.on('/time',function(cli,request,payload){
-    //定义一个格式化输出日期的函数
+    /* 定义一个格式化输出日期的函数 */
     function timestampToTime(timestamp) {
         var date = new Date(timestamp);
         var Y = date.getFullYear() + '-';
@@ -53,8 +51,11 @@ server.on('/time',function(cli,request,payload){
     cli.reply(0,request.seqno,content)
 })
 
-
 /* 该功能可以帮助VSOA服务器同步数据，减少数据同步代码。 */
+
+/**
+ * 
+*/
 const data = {
     count: 123456
 }
@@ -69,14 +70,12 @@ server.on('/count', function (cli, request, payload) {
     });
 });
 
-
 /* 每秒想发布订阅消息*/
 setInterval(() => {
-    server.publish('/a', { param: { msg: 'Message sent from "/a"' } });
-    server.publish('/a/b', { param: { msg: 'Message sent from "/a/b/' } });
-    server.publish('/a/b/c', { param: { msg: 'Message sent from "/a/b/c"' } });
+    server.publish('/a', { param: { msg: " Message sent from /a" } });
+    server.publish('/a/b', { param: { msg: " Message sent from /a/b/" } });
+    server.publish('/a/b/c', { param: { msg: "Message sent from /a/b/c" } });
 }, 1000);
-
 
 /* 启动 VSOA 服务 */
 const saddr = Tcp.sockaddr(Tcp.INADDR_ANY, VSOA_PORT)

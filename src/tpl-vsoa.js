@@ -40,9 +40,7 @@ new Task('src/vsoa-server-task.js');
 Task.on('message', function (msg, from) {
     if (msg.type === 'vsoa server') {
         /* 初始化 vsoa client 实例 */
-        vsoaCliSer.vsoaClientInit({ port: msg.port })
-        /*io传入Client模块中*/
-        vsoaCliSer.createSocketIO(io)
+        vsoaCliSer.vsoaClientInit({ port: msg.port },io)
         /* Start App */
         app.start();
     }
