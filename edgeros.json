@@ -19,7 +19,7 @@
         "log": "console",
         "will": false,
         "reside": false,
-        "mesv": "1.3.7",
+        "mesv": "1.10.2",
         "experimental": false,
         "resource": "public"
     },
