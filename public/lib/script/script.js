@@ -2,40 +2,61 @@
 const list = document.querySelector('.list');
 const popContent = document.querySelector('.popup_content')
 const bagcontent = document.querySelector('.bagcontent')
-const sendbag = document.querySelector('.sendbag')
 
 /* ---------------------- 初始化网络----------------------*/
 let token = ''
 let srand = ''
-/* 定义socket */
-const socket = io(`https://${location.host}`, {
-  path: '/socket.io',
-  reconnectionDelayMax: 10000,
-});
+let auth = {}
+let socket={}
 
-/* edger 初始化*/ 
+/* edger 初始化*/
 edger.token().then(data => {
   var { token, srand } = data;
   token = data.token;
   srand = data.srand;
+  auth = {
+    "edger-token": token,
+    "edger-srand": srand,
+  }
   init();
 }).catch(error => {
   console.error(error);
 });
 
-/* 监听token更新 */ 
+/* 监听token更新 */
 edger.onAction('token', (data) => {
   token = data.token;
   srand = data.srand;
 });
 
-/* 获取网络权限 */ 
+/* 获取网络权限 */
+/**
+ * @param {object} auth 安全信息
+*/
 function init() {
   edger.permission.request({
     code: ['network'],
     type: 'permissions'
   }).then((data) => {
-    console.log('申请网络权限:', data)
+    console.log('申请网络权限:', data);
+    /*安全设置*/
+  socket = io(`https://${location.host}`, {
+      query: auth,
+      path: '/socket.io',
+      reconnectionDelayMax: 10000,
+  });
+  /* 用于接收从后端发至前端的消息 */
+  socket.on('connect', function () {
+    socket.on('subscribeSerA', (data) => {
+        listData(data)
+      })
+      socket.on('subscribeSerB', (data) => {
+        listData(data)
+      })
+      socket.on('datagram', (data) => {
+        listData(data)
+      })
+  });
   }).catch(error => {
     console.error(error);
   });
@@ -51,15 +72,15 @@ function clearData() {
 /**
  * @param {object} data 数组对象
 */
-function listData(data){
+function listData(data) {
   const Ele = document.createElement('li')
-  if(data instanceof Array){
+  if (data instanceof Array) {
     let content = data[1].param.msg
     let text = `收到来自  ${data[0]}  的服务,内容为: ${content}`
     Ele.textContent = text;
     list.appendChild(Ele)
   }
-  else{
+  else {
     let content = data.param
     let text = `发送到服务端的内容为: ${content}`
     Ele.textContent = text;
@@ -107,27 +128,14 @@ function hidePopup() {
   overlay.style.display = "none";
   popContent.innerHTML = ''
 }
- 
+
 /* 发包到后台事件 */
-sendbag.addEventListener('click',function(){
+function sendbag(){
   sendDatagram();
-  bagcontent.value=null
-})
+  bagcontent.value = null
+}
 
 /* ---------------------- 获取后台服务----------------------*/
-
-/* 用于接收从后端发至前端的消息 */
-socket.on('connect', function () {
-  socket.on('subscribeSerA', (data) => {
-    listData(data)
-  })
-  socket.on('subscribeSerB', (data) => {
-    listData(data)
-  })
-  socket.on('datagram', (data) => {
-    listData(data)
-  })
-})
 
 /* 发送订阅请求 */
 function sendSub(urlpath) {
@@ -155,7 +163,7 @@ async function sendFetch() {
   return msg.param
 }
 
-/* 发包 */ 
+/* 发包 */
 function sendDatagram() {
   const vals = bagcontent.value
   if (vals) {
@@ -165,7 +173,7 @@ function sendDatagram() {
 }
 
 
- /* http 请求链接*/
+/* http 请求链接*/
 async function httpSend(router) {
   try {
     const res = await fetch(`/api/${router}`, {

@@ -107,7 +107,8 @@ function vsoaClientCall(){
 
 //RPC同步
 function vsoaClientFetch(){
-    return  vsoaClient.fetch('/count')
+    const url='/count'
+    return  vsoaClient.fetch(url)
 }
 
 /* Datagram方式传递参数 */

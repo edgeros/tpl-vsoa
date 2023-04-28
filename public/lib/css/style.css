@@ -159,23 +159,17 @@ input:checked+.slider:before {
   min-width: 200px;
   height: 240px;
   border-radius: 5px;
-  margin: 100px auto;
+  margin: 250px auto;
   text-align: center;
-}
-
-/* 弹出框的标题 */
-.popup_title {
-  height: 60px;
-  line-height: 60px;
-  border-bottom: solid 1px #cccccc;
-  margin-bottom: 10px;
+  padding-top: 40px;
 }
 
 /* 弹出框的内容 */
 .popup_content {
   height: 50px;
   line-height: 50px;
-  padding: 15px 20px;
+  padding: 15px 15px;
+
 }
 
 /* 弹出框的按钮栏 */

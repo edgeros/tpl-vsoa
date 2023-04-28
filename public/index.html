@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, viewport-fit=cover" />
   <meta charset="UTF-8">
   <title>VSOA Template</title>
-  <script src="./lib//script/sdk.min.js"></script>
+  <script src="./lib/script/sdk.min.js"></script>
   <script src="./lib/script/socket.io.js"></script>
-  <link rel="stylesheet" href="./lib//css/style.css">
+  <link rel="stylesheet" href="./lib/css/style.css">
 </head>
 
 <body>
@@ -16,14 +16,14 @@
     <div class="switchbox">
       <h3>订阅和取消订阅</h3>
       <div class="box">
-        <p style="margin-left: 8%">服务地址:'/a'</p>
+        <p style="margin-left: 8%">服务地址:/a</p>
         <label class="switch" style="margin-right: 8%">
           <input class="slider" name="/a" type="checkbox" onclick="getData(this)">
           <div class="slider round"></div>
         </label>
       </div><br>
       <div class="box">
-        <p style="margin-left: 8%">服务地址:'/a/b'</p>
+        <p style="margin-left: 8%">服务地址:/a/b</p>
         <label class="switch" style="margin-right: 8%">
           <input class="slider" name="/a/b" type="checkbox" onclick="getData(this)">
           <div class="slider round"></div>
@@ -51,7 +51,7 @@
     </div><br>
     <div class="rooter">
       <input style="height:40px;width:180px;" class="bagcontent" type="text" placeholder="请输入需要发送到后台的内容">
-      <button class="sendbag">确认发包</button>
+      <button onclick="sendbag()">确认发包</button>
     </div>
   </div>
 </body>
