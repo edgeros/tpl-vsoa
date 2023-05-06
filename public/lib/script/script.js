@@ -6,18 +6,13 @@ const bagcontent = document.querySelector('.bagcontent')
 /* ---------------------- 初始化网络----------------------*/
 let token = ''
 let srand = ''
-let auth = {}
-let socket={}
+let socket = {}
 
 /* edger 初始化*/
 edger.token().then(data => {
   var { token, srand } = data;
   token = data.token;
   srand = data.srand;
-  auth = {
-    "edger-token": token,
-    "edger-srand": srand,
-  }
   init();
 }).catch(error => {
   console.error(error);
@@ -30,9 +25,6 @@ edger.onAction('token', (data) => {
 });
 
 /* 获取网络权限 */
-/**
- * @param {object} auth 安全信息
-*/
 function init() {
   edger.permission.request({
     code: ['network'],
@@ -40,14 +32,17 @@ function init() {
   }).then((data) => {
     console.log('申请网络权限:', data);
     /*安全设置*/
-  socket = io(`https://${location.host}`, {
-      query: auth,
+    socket = io(`https://${location.host}`, {
+      query: {
+        "edger-token": token,
+        "edger-srand": srand,
+      },
       path: '/socket.io',
       reconnectionDelayMax: 10000,
-  });
-  /* 用于接收从后端发至前端的消息 */
-  socket.on('connect', function () {
-    socket.on('subscribeSerA', (data) => {
+    });
+    /* 用于接收从后端发至前端的消息 */
+    socket.on('connect', function () {
+      socket.on('subscribeSerA', (data) => {
         listData(data)
       })
       socket.on('subscribeSerB', (data) => {
@@ -56,7 +51,7 @@ function init() {
       socket.on('datagram', (data) => {
         listData(data)
       })
-  });
+    });
   }).catch(error => {
     console.error(error);
   });
@@ -95,6 +90,7 @@ function listData(data) {
  */
 function getData(element) {
   const urlpath = element.name
+  const stacode = element.checked
   if (element.checked) {
     sendSub(urlpath)
   }
@@ -111,13 +107,7 @@ function showPopup(element) {
   if (element.name === 'callbtn') {
     const content = sendCall()
     content.then((data) => {
-      popContent.innerHTML = `现在的时间是:${data.today}`
-    })
-  }
-  if (element.name === 'fetchbtn') {
-    const content = sendFetch()
-    content.then((data) => {
-      popContent.innerHTML = `收到的消息是:${data.count}`
+      popContent.innerHTML += `现在的时间是:${data.today}<br>服务已经成功重置了!`
     })
   }
 }
@@ -130,7 +120,7 @@ function hidePopup() {
 }
 
 /* 发包到后台事件 */
-function sendbag(){
+function sendbag() {
   sendDatagram();
   bagcontent.value = null
 }
@@ -156,13 +146,6 @@ async function sendCall() {
   return time.param
 }
 
-// 发送同步RPC请求
-async function sendFetch() {
-  const data = await httpSend('fetch')
-  const msg = await data.json()
-  return msg.param
-}
-
 /* 发包 */
 function sendDatagram() {
   const vals = bagcontent.value
@@ -171,7 +154,6 @@ function sendDatagram() {
     httpSend('datagram')
   }
 }
-
 
 /* http 请求链接*/
 async function httpSend(router) {

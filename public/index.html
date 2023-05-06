@@ -16,9 +16,9 @@
     <div class="switchbox">
       <h3>订阅和取消订阅</h3>
       <div class="box">
-        <p style="margin-left: 8%">服务地址:/a</p>
+        <p style="margin-left: 8%">服务地址:/a/</p>
         <label class="switch" style="margin-right: 8%">
-          <input class="slider" name="/a" type="checkbox" onclick="getData(this)">
+          <input class="slider" name="/a/" type="checkbox" onclick="getData(this)">
           <div class="slider round"></div>
         </label>
       </div><br>
@@ -38,8 +38,12 @@
       <ul class="list"></ul>
     </div><br>
     <div class="popbox">
-      <button class="showPopup" name='callbtn' onclick="showPopup(this)">发送RPC消息</button>
-      <button class="showPopup" name='fetchbtn' onclick="showPopup(this)">同步RPC消息</button>
+      <button
+       class="showPopup" 
+       name='callbtn' 
+       onclick="showPopup(this)"
+       style="height: 48px; width: 155px; margin-left: 84px;"
+       >重置服务信息(RPC请求)</button>
       <div id="overlay">
         <div class="popup">
           <p class="popup_content"></p>
@@ -50,7 +54,7 @@
       </div>
     </div><br>
     <div class="rooter">
-      <input style="height:40px;width:180px;" class="bagcontent" type="text" placeholder="请输入需要发送到后台的内容">
+      <input style="height:40px;width:180px;" class="bagcontent" type="number" placeholder="请输入数字以修改订阅服务">
       <button onclick="sendbag()">确认发包</button>
     </div>
   </div>

@@ -67,7 +67,6 @@ body {
 .popbox {
   width: 80%;
   display: flex;
-  justify-content: space-between;
 }
 
 .rooter {
@@ -162,19 +161,13 @@ input:checked+.slider:before {
   margin: 250px auto;
   text-align: center;
   padding-top: 40px;
+  align-content: flex-start;
+  line-height: 20px;
 }
 
 /* 弹出框的内容 */
 .popup_content {
-  height: 50px;
-  line-height: 50px;
-  padding: 15px 15px;
-
-}
-
-/* 弹出框的按钮栏 */
-.popup_btn {
-  padding-bottom: 10px;
+  height: 70px;
 }
 
 /* 弹出框的按钮 */

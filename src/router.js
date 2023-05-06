@@ -40,15 +40,6 @@ router.get('/call', function (req, res) {
 	});
 })
 
-/**  
- * RPC异步模式接口
- */
-router.get('/fetch', function (req, res) {
-	vsoaCliSer.vsoaClientFetch().then((data)=>{
-		res.json(data.payload)
-		res.send('fetch success!');
-	})
-});
 
 /**
  * Datagram发包形式接口

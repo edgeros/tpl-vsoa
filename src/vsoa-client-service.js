@@ -65,6 +65,9 @@ vsoaClient.on('message',(url,payload)=>{
             break;
         case '/a/b':
             io.emit('subscribeSerB',[url,payload]);
+            break;
+        case '/a/b/c':
+            io.emit('subscribeSerA',[url,payload]);
     }
 })
 
@@ -92,6 +95,12 @@ function vsoaClientUnsub(){
 /*RPC模式*/
 //RPC call
 function vsoaClientCall(){
+    //重置订阅信息的内容
+    const path='/resetting'
+    vsoaClient.call(path,function(error){
+        console.error('RPC call error:', error)
+    })
+    //GET方式获取时间
     const url='/time'
     return new Promise((resolve,reject)=>{
         vsoaClient.call(url,function(error,payload){
@@ -105,11 +114,6 @@ function vsoaClientCall(){
     })
 }
 
-//RPC同步
-function vsoaClientFetch(){
-    const url='/count'
-    return  vsoaClient.fetch(url)
-}
 
 /* Datagram方式传递参数 */
 function vsoaClientDatagram(){
@@ -123,6 +127,5 @@ module.exports = {
     vsoaClientSub,
     vsoaClientUnsub,
     vsoaClientCall,
-    vsoaClientFetch,
     vsoaClientDatagram,
 }
