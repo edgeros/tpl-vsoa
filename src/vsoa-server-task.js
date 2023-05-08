@@ -46,19 +46,19 @@ server.on('/time', function (cli, request, payload) {
 })
 
 
-/* 每秒想发布订阅消息 */
-
+/* 修改num的值 */
 let num = 0;
-//修改num的值
 server.ondata = function (cli, url, payload) {
     console.log(`[tpl vsoa] vsoa server receive message form :${url}`, `messgae:`, JSON.stringify(payload.param));
     num = payload.param
 }
-//重置num的值
+
+/* 重置num的值 */
 server.on('/resetting', function (cli, request, payload) {
     num = 0
 })
 
+/* 每秒想发布订阅消息 */
 setInterval(() => {
     server.publish('/a', { param: { msg: num } });
     server.publish('/a/b', { param: { msg: num } });

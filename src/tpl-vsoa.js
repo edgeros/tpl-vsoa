@@ -35,30 +35,28 @@ const io = socketIo(app, {
     cookie: false
 });
 
-let vsoaSerInfo={}
 /* 当vsoa server 启动后启动 EAP后台  */
+let vsoaSerInfo={}
 new Task('src/vsoa-server-task.js');
 Task.on('message', function (info, from) {
     if (info.type === 'vsoa server') {
-        /* 初始化 vsoa client 实例 */
         vsoaSerInfo=info
-        /* Start App */
         app.start();
         checkPermission()
     }
 });
 
-/*判断权限*/
+/* 判断权限 */
 function checkPermission(){
     permission.check({
         network:true
     },(res)=>{
         /* 初始化 vsoa client 实例 */
-        if(res)
-        vsoaCliSer.vsoaClientInit({ port: vsoaSerInfo.port },io)
+        if(res) vsoaCliSer.vsoaClientInit({ port: vsoaSerInfo.port },io)
     })
 }
-/*当前应用的权限修改时调用*/
+
+/* 当前应用的权限修改时调用 */
 permission.update(function(perm){
     checkPermission()
 })

@@ -11,17 +11,11 @@
 const vsoa = require('vsoa')
 const Tcp = require('tcp');
 
-/**
- * init vsoa client
- * @param {object} config
- * @param {string} config.addr vsoa 服务地址
- * @param {number} config.port port 服务端口
- * @param {object} server io服务
- */
 const addr='127.0.0.1'
 let io=''
 let url=''
 let content={}
+
 /* 初始化服务端和io */
 function vsoaClientInit(config,server) {
     io=server
@@ -71,8 +65,7 @@ vsoaClient.on('message',(url,payload)=>{
     }
 })
 
-/* 发布订阅模式 */
-//客户端订阅服务端发布的服务
+/* 发布订阅模式 客户端订阅服务端发布的服务*/
 function vsoaClientSub(){
     vsoaClient.subscribe(url, (err) => {
         if(err){
@@ -81,7 +74,7 @@ function vsoaClientSub(){
     })
 }
 
-//客户端取消服务端的服务
+/* 客户端取消服务端的服务 */
 function vsoaClientUnsub(){
     vsoaClient.unsubscribe(url, (err) => {
         if(err){
@@ -93,13 +86,13 @@ function vsoaClientUnsub(){
 }
 
 /*RPC模式*/
-//RPC call
 function vsoaClientCall(){
     //重置订阅信息的内容
     const path='/resetting'
     vsoaClient.call(path,function(error){
         console.error('RPC call error:', error)
     })
+
     //GET方式获取时间
     const url='/time'
     return new Promise((resolve,reject)=>{

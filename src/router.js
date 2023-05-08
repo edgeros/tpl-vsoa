@@ -14,25 +14,19 @@ const Router = WebApp.Router;
 const router = Router.create();
 const vsoaCliSer = require('./vsoa-client-service');
 
-/**
- * 订阅服务接口
- */
+/* 订阅服务接口 */
 router.get('/subscribe', function (req, res) {
 	vsoaCliSer.vsoaClientSub();
 	res.send('subscribe success!')
 });
 
-/**
- * 取消订阅服务接口
- */
+/* 取消订阅服务接口 */
 router.get('/unsubscribe', function (req, res) {
 	vsoaCliSer.vsoaClientUnsub();
 	res.send('unsubscribe success!');
 });
 
-/**
- * RPC发送信息
- */
+/* RPC发送信息 */
 router.get('/call', function (req, res) {
 	vsoaCliSer.vsoaClientCall().then((time)=>{
 		res.json(time)
@@ -41,9 +35,7 @@ router.get('/call', function (req, res) {
 })
 
 
-/**
- * Datagram发包形式接口
- */
+/* Datagram发包形式接口 */
 router.get('/datagram', function (req, res) {
 	vsoaCliSer.vsoaClientDatagram()
 	res.send('Datgram success!');
