@@ -1,6 +1,6 @@
 {
     "name": "VSOA",
-    "bundleid": "com.acoinfo.tpl.vsoa",
+    "bundleid": "com.example.default",
     "ignore_modules": [
         "@edgeros/eslint-plugin-jsre",
         "@edgeros/jsre-types"
