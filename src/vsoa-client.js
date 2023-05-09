@@ -6,7 +6,7 @@
 *
 * Author : Fu Wenhao <fuwenhao@acoinfo.com>
 * File   : vsoa-client-service.js
-* Desc   : Initialize a" vsoa-client" and listen server
+* Desc   : Initialize a "vsoa-client"
 */
 const vsoa = require('vsoa')
 const Tcp = require('tcp');
@@ -41,18 +41,18 @@ const vsoaClient = new vsoa.Client({
 })
 
 /* 监听客户端与服务端连接是否成功 */
-vsoaClient.on('connect',  (info)=> {
+vsoaClient.on('connect', (info)=> {
     console.log('[tpl vsoa] vsoa client connect to server:event]', info)
 })
 
 /* 监听客户端与服务端连接失败的信息 */
-vsoaClient.on('error',(err)=>{
+vsoaClient.on('error', (err)=>{
     console.log('[tpl vsoa] vsoa client connect error]', err)
 })
 
 /* 监听客户端收到服务端发送的消息，每当收到一条消息时，都会发送一条消息到前端 */
-vsoaClient.on('message',(url,payload)=>{
-    console.log(`[tpl vsoa] the message from ${url}:` ,JSON.stringify(payload))
+vsoaClient.on('message', (url,payload)=>{
+    console.log(`[tpl vsoa] the message from ${url}:`, JSON.stringify(payload))
     switch (url){
         case '/a':
             io.emit('subscribeSerA',[url,payload]);
@@ -66,9 +66,9 @@ vsoaClient.on('message',(url,payload)=>{
 })
 
 /* 发布订阅模式 客户端订阅服务端发布的服务*/
-function vsoaClientSub(){
+function vsoaClientSub() {
     vsoaClient.subscribe(url, (err) => {
-        if(err){
+        if (err) {
             console.error('[tpl vsoa] subscribe error',err)
         }
     })
@@ -77,9 +77,9 @@ function vsoaClientSub(){
 /* 客户端取消服务端的服务 */
 function vsoaClientUnsub(){
     vsoaClient.unsubscribe(url, (err) => {
-        if(err){
+        if (err) {
             console.error('[tpl vsoa] unsubscribe error',err)
-        }else{
+        } else {
             console.log('[tpl vsoa] vsoa client unsubscribe:callback]',`service ${url} is unsubscribed`)
         }
     })
@@ -110,9 +110,8 @@ function vsoaClientCall(){
 
 /* Datagram方式传递参数 */
 function vsoaClientDatagram(){
-    const url='/light'
-    vsoaClient.datagram(url,{param:content},true);
-    io.emit('datagram',{param:content})
+    vsoaClient.datagram('/light', {param:content}, true);
+    io.emit('datagram', { param:content });
 }
 
 module.exports = {

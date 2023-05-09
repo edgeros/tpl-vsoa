@@ -6,7 +6,7 @@
 *
 * Author : Fu Wenhao <fuwenhao@acoinfo.com>
 * File   : vsoa-server-task.js
-* Desc   : Simulate a" vsoa" server program
+* Desc   : Simulate a "vsoa" server program
 */
 const vsoa = require('vsoa');
 const Tcp = require('tcp');
