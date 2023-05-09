@@ -11,37 +11,45 @@
 
 require('./src/vsoa-server')
 
-const webapp = require('webapp');
+const webapp = require('webapp')
 const socketIo = require('socket.io')
-const router = require('./router');
-const vsoaServer = require('./src/vsoa-server');
-const vsoaClient = require('./src/vsoa-client');
+const router = require('./src/router')
+const vsoaServer = require('./src/vsoa-server')
+const vsoaClient = require('./src/vsoa-client')
 
-console.inspectEnable = true;
+console.inspectEnable = true
 
 /* Create App */
-const app = webapp.createApp();
+const app = webapp.createApp()
 
-app.use(webapp.static('./public'));
-app.use('/api', router);
-app.start();
+app.use(webapp.static('./public'))
+app.use('/api', router)
+app.start()
 
-vsoaServer.start();
+vsoaServer.start()
 
 /* Init socket.io */
-const io = socketIo(app, { 
-    serveClient: false,
-    pingInterval: 10000,
-    pingTimeout: 5000,
-    cookie: false
-});
+const io = socketIo(app, {
+  serveClient: false,
+  pingInterval: 10000,
+  pingTimeout: 5000,
+  cookie: false
+})
+
+let vsoaSerInfo = {}
+
+Task.on('message', function (info, from) {
+  if (info.type === 'vsoa server') {
+    vsoaSerInfo = info
+  }
+})
 
 /* Permission update callback */
 permission.update(function () {
-  permission.check({ network: true }, (res)=>{
-    if(res) vsoaClient.vsoaClientInit({ port: vsoaSerInfo.port }, io);
-  });
-});
+  permission.check({ network: true }, (res) => {
+    if (res) vsoaClient.vsoaClientInit({ port: vsoaSerInfo.port }, io)
+  })
+})
 
 /* Event loop */
-require('iosched').forever();
+require('iosched').forever()

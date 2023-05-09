@@ -9,18 +9,10 @@
 * Desc   : VSOA server
 */
 
-module.exports.start = start;
-
-let vsoaSerInfo = {};
-
-Task.on('message', function (info, from) {
-    if (info.type === 'vsoa server') {
-        vsoaSerInfo = info;
-    }
-});
+module.exports.start = start
 
 function start () {
-    permission.check({ network: true }, (res)=>{
-        new Task('src/vsoa-server-task.js');
-    });
+  permission.check({ network: true }, (res) => {
+    new Task('src/vsoa-server-task.js')
+  })
 }
