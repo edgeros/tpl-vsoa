@@ -1,7 +1,7 @@
 {
     "name": "com.example.default",
     "version": "0.0.1",
-    "description": "一个 VSOA 开发模板",
+    "description": "EdgerOS app template - VSOA",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/edgeros/tpl-vsoa.git"

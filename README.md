@@ -1,6 +1,15 @@
-# VSOA 应用开发模板
-- 内置 VSOA Mock Server
+# EdgerOS app template - VSOA
+====
 
-## 应用包含功能
-- vsoa client  相关功能演示
-- vsoa server  相关功能演示
+This demo app starts a VSOA Server internally, and connect to itsef via a new VSOA client.
+User may send RPC requests and subscribe URL messages.
+
+## Features
+
+- Simple interactive web interface (HTTP).
+- VSOA server: to be connected by the client.
+- VSOA client: to connect the server started by this app itself.
+
+## Requirements
+
+- Network permission: to start VSOA server
