@@ -9,8 +9,6 @@
 * Desc   : application entrypoint
 */
 
-require('./src/vsoa-server')
-
 const webapp = require('webapp')
 const socketIo = require('socket.io')
 const router = require('./src/router')
@@ -41,15 +39,23 @@ let vsoaSerInfo = {}
 Task.on('message', function (info, from) {
   if (info.type === 'vsoa server') {
     vsoaSerInfo = info
+    checkPermission()
   }
 })
 
 /* Permission update callback */
 permission.update(function () {
-  permission.check({ network: true }, (res) => {
-    if (res) vsoaClient.vsoaClientInit({ port: vsoaSerInfo.port }, io)
-  })
+  checkPermission()
 })
+
+function checkPermission () {
+  permission.check({
+    network: true
+  }, (res) => {
+    /* 初始化 vsoa client 实例 */
+    if (res) { vsoaClient.vsoaClientInit({ port: vsoaSerInfo.port }, io) }
+  })
+}
 
 /* Event loop */
 require('iosched').forever()

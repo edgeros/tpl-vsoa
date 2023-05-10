@@ -20,8 +20,12 @@ let content = {}
 function vsoaClientInit (config, server) {
   io = server
   const saddr = Tcp.sockaddr(addr, config.port)
-  vsoaClient.connect(saddr, (_err, info) => {
-    console.log('[tpl vsoa] vsoa client connect to server:callback]', info)
+  vsoaClient.connect(saddr, (err, info) => {
+    if (err) {
+      console.log('Error: ', err)
+    } else {
+      console.log('[tpl vsoa] vsoa client connect to server:callback]', info)
+    }
   })
   io.on('connection', (socket) => {
     socket.on('urlpath', (arg) => {
