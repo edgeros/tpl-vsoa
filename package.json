@@ -1,6 +1,6 @@
 {
     "name": "com.example.default",
-    "version": "0.0.7",
+    "version": "0.0.1",
     "description": "EdgerOS app template - VSOA",
     "repository": {
         "type": "git",
